@@ -1,0 +1,62 @@
+{% schema %}
+{
+    "name": "Filter Style",
+    "templates": ["collection", "page"],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Item Setting",
+            "settings": [
+                {
+                    "type": "text",
+                    "label": "Text",
+                    "id": "text"
+                },
+                {
+                    "type": "color",
+                    "id": "color",
+                    "label": "Font Color"
+                },
+                {
+                    "type": "text",
+                    "label": "Parent's Title",
+                    "id": "parent_title",
+                    "info": "No need to fill this field if you apply for all same texts."
+                },
+                {
+                    "type": "text",
+                    "label": "Order Number",
+                    "id": "order",
+                    "info": "Filter values that have a order number assigned to it will have priority."
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Filter Style"
+        }
+    ]
+}
+{% endschema %}
+
+<style>
+    .main-products-grid .facets .drawer__content .filter__content > ul {
+        display: flex;
+        flex-direction: column;
+    }
+    .main-products-grid .facets .drawer__content .filter__content > ul li {
+        order: 100;
+    }
+    {% for block in section.blocks %}
+        {% if block.settings.parent_title != blank %}details-disclosure[data-label="{{ block.settings.parent_title | handle }}"]{% endif %} input[value="{{ block.settings.text }}"] + label {
+            color: {{ block.settings.color }};
+        }
+        {% if block.settings.order != blank %}
+            {% if block.settings.parent_title != blank %}details-disclosure[data-label="{{ block.settings.parent_title | handle }}"]{% endif %} li[data-class="{{ block.settings.text | handle }}"] {
+                order: {{ block.settings.order }} !important;
+                display: block !important;
+            }
+        {% endif %}
+    {% endfor %}
+</style>
